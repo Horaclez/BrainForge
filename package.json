@@ -1,0 +1,5 @@
+{"name":"brainforge","version":"1.0.0","description":"Bloc Markdown instantaneo, sin nube ni plugins","main":"main.js","author":"BrainForge","license":"MIT",
+"scripts":{"start":"electron .","dist":"electron-builder --win nsis --publish never"},
+"build":{"appId":"cl.brainforge.app","productName":"BrainForge","files":["main.js","preload.js","index.html"],"win":{"target":"nsis"},
+"nsis":{"oneClick":false,"allowToChangeInstallationDirectory":true,"perMachine":false,"createDesktopShortcut":true,"createStartMenuShortcut":true}},
+"devDependencies":{"electron":"^33.0.0","electron-builder":"^25.0.0"}}

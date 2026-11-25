@@ -1,0 +1,11 @@
+const{app,BrowserWindow,Menu,ipcMain,dialog,shell}=require('electron'),fs=require('fs'),path=require('path');
+const ok=f=>path.basename(String(f));
+ipcMain.handle('pick',async()=>{const r=await dialog.showOpenDialog({properties:['openDirectory','createDirectory']});return r.canceled?null:r.filePaths[0]});
+ipcMain.handle('list',(e,d)=>fs.readdirSync(d).filter(f=>/\.md$/i.test(f)).map(f=>({name:f,body:fs.readFileSync(path.join(d,f),'utf8')})));
+ipcMain.handle('write',(e,d,f,b)=>{fs.writeFileSync(path.join(d,ok(f)),String(b))});
+ipcMain.handle('del',(e,d,f)=>{try{fs.unlinkSync(path.join(d,ok(f)))}catch(x){}});
+app.whenReady().then(()=>{Menu.setApplicationMenu(null);
+const w=new BrowserWindow({width:1280,height:800,backgroundColor:'#13202a',title:'BrainForge',webPreferences:{preload:path.join(__dirname,'preload.js'),contextIsolation:true}});
+w.webContents.setWindowOpenHandler(({url})=>{if(/^https?:/.test(url))shell.openExternal(url);return{action:'deny'}});
+w.loadFile('index.html')});
+app.on('window-all-closed',()=>app.quit());
